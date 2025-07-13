@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: TelegramBerkutBot
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${SERVER_URL:jdbc:postgresql://localhost:5432/first_db}
+    username: ${SERVER_USERNAME:postgres}
+    password: ${SERVER_PASS:1322}
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+
+app:
+  openapi:
+    dev-url: http://localhost:8088
+    prod-url: http://localhost:8081
+  telegram:
+    name: ${TELEGRAM_BOT_USERNAME:BerkutEchoBot}
+    token: ${TELEGRAM_BOT_TOKEN:}
+    commands:
+      bind: "/bind "
+      unbind: "/unbind"
+    messages:
+      bind:
+        success: "Чат успешно привязан к аккаунту!"
+      unbind:
+        success: "Чат успешно отвязан от аккаунта!"
+      error:
+        invalid-token: "Неверный токен!"
+        token-already-bound: "Чат уже привязан!"
+        internal-error: "Ошибка сервера. Попробуйте позже."
+        default-message: "Неизвестная команда. Список команд('/bind ','/unbind')"
+  api:
+    security:
+      token:
+        length: 32
+    messages:
+      echo: "%s, я получил от тебя сообщение:\n%s"
+
+server:
+  port: 8088
