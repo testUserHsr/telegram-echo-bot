@@ -8,18 +8,16 @@ spring:
     password: ${SERVER_PASS:1322}
     hikari:
       maximum-pool-size: 10
+      connection-timeout: 3000
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
-    open-in-view: true
+    open-in-view: false
 
 app:
-  openapi:
-    dev-url: http://localhost:8088
-    prod-url: http://localhost:8081
   telegram:
-    name: ${TELEGRAM_BOT_USERNAME:BerkutEchoBot}
+    name: ${TELEGRAM_BOT_USERNAME:}
     token: ${TELEGRAM_BOT_TOKEN:}
     commands:
       bind: "/bind "
@@ -38,6 +36,9 @@ app:
     security:
       token:
         length: 32
+      jwt:
+        secret-key: 7738782F425432A462D413F44284614E7235757635266556A5867217AAE32743
+        expiration: 86400000 # a day
     messages:
       echo: "%s, я получил от тебя сообщение:\n%s"
 

@@ -22,6 +22,9 @@
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 		<org.telegrambots.version>6.8.0</org.telegrambots.version>
 		<org.hibernate.version>8.0.0.Final</org.hibernate.version>
+		<org.sonar.version>3.11.0.3922</org.sonar.version>
+		<org.jacoco.version>0.8.11</org.jacoco.version>
+		<io.jjwt.version>0.11.5</io.jjwt.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -76,6 +79,22 @@
 		</dependency>
 
 		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>${io.jjwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>${io.jjwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>${io.jjwt.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -92,6 +111,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.1.5</version>
+				<configuration>
+					<layers>
+						<enabled>true</enabled>
+					</layers>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -121,7 +146,12 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.11</version>
+				<version>${org.jacoco.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>${org.sonar.version}</version>
 			</plugin>
 		</plugins>
 	</build>
