@@ -2,6 +2,7 @@ package ru.tech.telegrambot.service.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
      * @throws UserNotFoundException if user not found
      */
     @Transactional(readOnly = true)
+    @Cacheable(value = "usersById", key = "#userId")
     @Override
     public AppUser getById(Long userId) {
         return appUserRepository.findById(userId)
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
      * @throws UserNotFoundException if user not found
      */
     @Transactional(readOnly = true)
+    @Cacheable(value = "usersByUsername", key = "#username")
     @Override
     public AppUser getByUsername(String username) {
         return appUserRepository.findByUsername(username)
@@ -61,15 +64,18 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public void register(RegistrationRequest registrationRequest) {
+    public AppUser register(RegistrationRequest registrationRequest) {
         log.info("Registering new user: {}", registrationRequest.username());
         try {
             checkDuplicateUsername(registrationRequest.username());
+
             AppUser user = userMapper.toModel(registrationRequest);
             user.setPassword(passwordEncoder.encode(registrationRequest.password()));
             user.setTelegramToken(generateUniqueToken());
+
             appUserRepository.save(user);
             log.info("User {} registered successfully", user.getUsername());
+            return user;
         } catch (UsernameAlreadyExistsException | TokenGenerationException e) {
             throw e;
         } catch (Exception e) {

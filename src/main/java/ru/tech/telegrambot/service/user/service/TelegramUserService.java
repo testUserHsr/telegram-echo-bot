@@ -28,14 +28,14 @@ public interface TelegramUserService {
      * @throws UserNotFoundException     if token is invalid
      * @throws ChatAlreadyBoundException if chat ID is already in use
      */
-    void bindTokenToUser(String token, Long chatId);
+    AppUser bindTokenToUser(String token, Long chatId);
 
     /**
      * Removes Telegram chat ID association.
      *
      * @param chatId Telegram chat ID to unbind
      */
-    void unbindTokenFromUser(Long chatId);
+    AppUser unbindTokenFromUser(Long chatId);
 
     /**
      * Retrieves user's Telegram connection token.

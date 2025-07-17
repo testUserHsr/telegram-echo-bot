@@ -9,6 +9,7 @@ public class UserNotFoundException extends BusinessException {
     private static final String ID_MESSAGE = "User with ID %d not found";
     private static final String USERNAME_MESSAGE = "User with username '%s' not found";
     private static final String TOKEN_MESSAGE = "Invalid Telegram jwtToken";
+    private static final String CHAT_ID_MESSAGE = "User with chat ID %d not found";
 
     private UserNotFoundException(String message, Map<String, Object> context) {
         super(message, context);
@@ -48,6 +49,18 @@ public class UserNotFoundException extends BusinessException {
         return new UserNotFoundException(
                 String.format(USERNAME_MESSAGE, username),
                 Map.of("username", username)
+        );
+    }
+
+    /**
+     * Creates exception for missing user ID.
+     *
+     * @param chatId the ID that was not found
+     */
+    public static UserNotFoundException byChatId(Long chatId) {
+        return new UserNotFoundException(
+                String.format(CHAT_ID_MESSAGE, chatId),
+                Map.of("chatId", chatId)
         );
     }
 }

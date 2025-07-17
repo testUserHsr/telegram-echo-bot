@@ -1,5 +1,6 @@
 package ru.tech.telegrambot.config;
 
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,7 @@ import java.time.Clock;
 @Configuration
 @ComponentScan("ru.tech")
 @EnableWebMvc
+@EnableCaching
 @PropertySource("classpath:config/application.yml")
 public class AppConfig {
     @Bean

@@ -2,6 +2,7 @@ package ru.tech.telegrambot.service.user.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import ru.tech.telegrambot.exception.ChatAlreadyBoundException;
 import ru.tech.telegrambot.exception.TelegramTokenNotFoundException;
@@ -37,13 +38,14 @@ public class TelegramUserServiceImpl implements TelegramUserService {
      * @throws ChatAlreadyBoundException if chat ID is already in use
      */
     @Transactional
+    @CacheEvict(value = {"usersById", "usersByUsername"}, key = "#result.id")
     @Override
-    public void bindTokenToUser(String token, Long chatId) {
+    public AppUser bindTokenToUser(String token, Long chatId) {
         AppUser user = findByTelegramToken(token)
                 .orElseThrow(() -> UserNotFoundException.byToken("/bind", token));
         checkDuplicateChatId(chatId, user.getId());
         user.setTelegramChatId(chatId);
-        appUserRepository.save(user); // Optional line (JPA might auto-sync).
+        return user;
     }
 
     /**
@@ -63,12 +65,17 @@ public class TelegramUserServiceImpl implements TelegramUserService {
 
     /**
      * Removes Telegram chat ID association from user.
+     *
+     * @throws UserNotFoundException if chat id is invalid
      */
     @Transactional
+    @CacheEvict(value = {"usersById", "usersByUsername"}, key = "#result.id")
     @Override
-    public void unbindTokenFromUser(Long chatId) {
-        appUserRepository.findByTelegramChatId(chatId)
-                .ifPresent(appUser -> appUser.setTelegramChatId(null));
+    public AppUser unbindTokenFromUser(Long chatId) {
+        AppUser user = appUserRepository.findByTelegramChatId(chatId)
+                .orElseThrow(() -> UserNotFoundException.byChatId(chatId));
+        user.setTelegramChatId(null);
+        return user;
     }
 
     /**

@@ -30,5 +30,5 @@ public interface UserService {
      * @throws UsernameAlreadyExistsException if username is taken
      * @throws UserRegistrationException      if registration fails
      */
-    void register(RegistrationRequest user);
+    AppUser register(RegistrationRequest user);
 }
