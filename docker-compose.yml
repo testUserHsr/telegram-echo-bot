@@ -40,6 +40,7 @@ services:
       - "REDIS_PORT=6379"
       - "CACHE_PREFIX=${CACHE_PREFIX:-berkut}"
       - "CACHE_TTL=${CACHE_TTL:-30m}"
+      - "FLYWAY_ENABLED=true"
     ports:
       - "8088:8088"
     depends_on:
